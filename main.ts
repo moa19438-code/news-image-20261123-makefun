@@ -6,7 +6,7 @@
 // Try it locally:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
@@ -16,4 +16,7 @@ const dst = join(outDir, 'entry.png');
 copyFileSync(src, dst);
 if (!readFileSync(src).equals(readFileSync(dst))) {
   throw new Error('entry.png copy mismatch');
+}
+if (statSync(src).size !== statSync(dst).size) {
+  throw new Error('entry.png size mismatch');
 }
